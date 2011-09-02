@@ -6,29 +6,47 @@ class AutoTrimBehavior extends ModelBehavior {
 	private $_Model;
 	
 	/**
-	* Lista de formatos para os dados suportados pelo BD em uso.
-	* É recuperado automáticamente pela conexão com o banco.
-	*
-	* @var array
-	*/
+	 * Lista de formatos para os dados suportados pelo BD em uso.
+	 * É recuperado automáticamente pela conexão com o banco.
+	 *
+	 * @var array
+	 */
 	private $_typesFormat;
 	
 	/**
-	* Inicializa os dados do behavior
-	*
-	* @see ModelBehavior::setup()
-	*/
+	 * Lista com nomes dos modelos nos quais o behavior
+	 * não fará conversão.
+	 * 
+	 * Isso permite a compatibilidade com datasources que
+	 * não possuem tipos definidos.
+	 * 
+	 * @var array
+	 */
+	private $_disabledFor = array();
+	
+	/**
+	 * Inicializa os dados do behavior
+	 *
+	 * @see ModelBehavior::setup()
+	 */
 	public function setup(&$model, $config = array())
 	{
 		$this->_Model =& $model;
 		
 		$db =& ConnectionManager::getDataSource($this->_Model->useDbConfig);
-	
-		foreach($db->columns as $type => $info)
+		
+		if(!isset($db->columns) || empty($db->columns))
 		{
-			if(isset($info['format']))
+			$this->_disabledFor[$model->name] = true;
+		}
+		else
+		{
+			foreach($db->columns as $type => $info)
 			{
-				$this->_typesFormat[$type] = $info['format'];
+				if(isset($info['format']))
+				{
+					$this->_typesFormat[$type] = $info['format'];
+				}
 			}
 		}
 	}
@@ -43,7 +61,12 @@ class AutoTrimBehavior extends ModelBehavior {
 		$this->_Model =& $model;
 	
 		parent::beforeValidate($model);
-	
+		
+		if(isset($this->_disabledFor[$model->name]))
+		{
+			return true;
+		}
+		
 		return $this->_autoTrim();
 	}
 	
@@ -57,6 +80,11 @@ class AutoTrimBehavior extends ModelBehavior {
 		$this->_Model =& $model;
 	
 		parent::beforeSave($model);
+		
+		if(isset($this->_disabledFor[$model->name]))
+		{
+			return true;
+		}
 	
 		return $this->_autoTrim();
 	}
@@ -71,8 +99,11 @@ class AutoTrimBehavior extends ModelBehavior {
 		$this->_Model =& $model;
 	
 		parent::beforeFind($mode, $query);
-	
-		$this->_autoTrim($query['conditions']);
+		
+		if(!isset($this->_disabledFor[$model->name]))
+		{
+			$this->_autoTrim($query['conditions']);
+		}
 	
 		return $query;
 	}
