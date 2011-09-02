@@ -1,0 +1,25 @@
+h1. CakePHP UserGuard
+
+Este plugin contém alguns recursos úteis para prevenir erros provocados pelo usuário
+(em especial o preenchimento incorreto de formulário).
+
+
+h2. Autor e Copyright
+
+* *Copyright 2011,* "*Radig - Soluções em TI*":http://www.radig.com.br
+* Licença MIT - Isto quer dizer que o código está disponível sem nenhuma garantia, ao mesmo tempo que
+você pode usa-lo de forma isolada ou em conjunto com seu próprio código.
+
+h2. Observações
+
+* Consulte os testes incluído no plugin para ver melhor seu funcionamento
+
+h2. Como usar
+
+h3. Utilizando os Behaviors
+
+* Basta definir, no model que deseja ativa-lo, algo como a seguinte linha:
+
+bc. $actsAs = array('UserGuard.AutoTrim');
+
+* A partir daí o behavior vai remover espaços antes e depois de toda string.
