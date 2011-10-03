@@ -111,7 +111,7 @@ class AutoTrimBehavior extends ModelBehavior {
 	private function _autoTrim(&$query = null)
 	{
 		// verifica se há dados setados no modelo
-		if(isset($this->_Model->data) && !empty($this->_Model->data))
+		if(isset($this->_Model->data[$this->_Model->name]) && !empty($this->_Model->data[$this->_Model->name]))
 		{
 			// varre os dados setados
 			foreach($this->_Model->data[$this->_Model->name] as $field => $value)
