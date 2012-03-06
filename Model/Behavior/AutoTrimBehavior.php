@@ -98,7 +98,7 @@ class AutoTrimBehavior extends ModelBehavior {
 	{
 		$this->_Model =& $model;
 	
-		parent::beforeFind($mode, $query);
+		parent::beforeFind($model, $query);
 		
 		if(!isset($this->_disabledFor[$model->name]))
 		{
