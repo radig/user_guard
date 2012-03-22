@@ -41,7 +41,9 @@ class AutoTrimBehavior extends ModelBehavior {
 		if(isset($this->_disabledFor[$model->alias]))
 			return true;
 		
-		return $this->_autoTrim();
+		$this->_autoTrim();
+
+		return true;
 	}
 	
 	/**
@@ -58,7 +60,9 @@ class AutoTrimBehavior extends ModelBehavior {
 		if(isset($this->_disabledFor[$model->alias]))
 			return true;
 	
-		return $this->_autoTrim();
+		$this->_autoTrim();
+
+		return true;
 	}
 	
 	/**
@@ -74,7 +78,9 @@ class AutoTrimBehavior extends ModelBehavior {
 		
 		if(!isset($this->_disabledFor[$model->alias]))
 			$this->_autoTrim($query['conditions']);
-	
+
+		$this->_autoTrim();
+
 		return $query;
 	}
 	
