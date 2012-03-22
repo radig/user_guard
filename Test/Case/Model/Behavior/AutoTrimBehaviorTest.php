@@ -1,6 +1,4 @@
 <?php
-App::import('Behavior', 'UserGuard.AutoTrim');
-
 class Task extends CakeTestModel
 {
 	public $name = 'Task';
@@ -22,7 +20,7 @@ class Task extends CakeTestModel
 }
 
 
-class AutoTrimTest extends CakeTestCase {
+class AutoTrimBehaviorTest extends CakeTestCase {
 	
 	public $name = 'AutoTrim';
 	
@@ -59,11 +57,11 @@ class AutoTrimTest extends CakeTestCase {
 				)
 			)
 		);
-	
+		
 		$this->assertEqual($result, $expected);
 		
 		$result = $this->Task->find('all',
-			array('conditions' => array('Task.username' => ' Good  '))
+			array('conditions' => array('Task.username' => ' Good '))
 		);
 		
 		$this->assertEqual($result, $expected);
@@ -75,10 +73,10 @@ class AutoTrimTest extends CakeTestCase {
 		$this->assertEqual($result, $expected);
 	}
 	
-	public function testValidateAction()
+	/*public function testValidateAction()
 	{
 		
-	}
+	}*/
 	
 	public function testSaveAction()
 	{
