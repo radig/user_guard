@@ -86,7 +86,8 @@ class ClearEmptyBehavior extends ModelBehavior
 				case 'integer':
 					$Model->data[$Model->alias][$field] = $v['default'] ?: 0;
 					break;
-				default:
+				case 'string':
+				case 'text':
 					$Model->data[$Model->alias][$field] = $v['default'] ?: '';
 			}
 		}
