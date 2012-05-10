@@ -160,7 +160,7 @@ class AutoTrimBehavior extends ModelBehavior {
 				}
 
 				// caso o campo esteja vazio E não tenha um array como valor E o campo faz parte do schema
-				if(!empty($value) && isset($this->_Model->_schema[$field]))
+				if(!empty($value) && !is_array($value) && isset($this->_Model->_schema[$field]))
 				{
 					switch($this->_Model->_schema[$field]['type'])
 					{
