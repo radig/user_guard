@@ -1,81 +1,81 @@
 <?php
 class AutoTrimBehavior extends ModelBehavior {
-	
+
 	private $_Model;
-	
+
 	/**
 	 * Lista com nomes dos modelos nos quais o behavior
 	 * não fará conversão.
-	 * 
+	 *
 	 * Isso permite a compatibilidade com datasources que
 	 * não possuem tipos definidos.
-	 * 
+	 *
 	 * @var array
 	 */
 	private $_disabledFor = array();
-	
+
 	/**
 	 * Inicializa os dados do behavior
 	 *
 	 * @see ModelBehavior::setup()
 	 */
-	public function setup(&$model, $config = array())
+	public function setup(Model $model, $config = array())
 	{
-		$db =& $model->getDataSource();
+		$db = $model->getDataSource();
 
 		if(!isset($db->columns))
 			$this->_disabledFor[$model->alias] = true;
 	}
-	
+
 	/**
 	* Trim através do callback beforeValidate
 	*
 	* @see ModelBehavior::beforeValidate()
 	*/
-	public function beforeValidate(&$model)
+	public function beforeValidate(Model $model)
 	{
 		parent::beforeValidate($model);
 
-		$this->_Model =& $model;
-		
+		$this->_Model = $model;
+
 		if(isset($this->_disabledFor[$model->alias]))
 			return true;
-		
+
 		$this->_autoTrim();
 
 		return true;
 	}
-	
+
 	/**
 	 * Trim através do callback beforeSave
 	 *
 	 * @see ModelBehavior::beforeSave()
 	 */
-	public function beforeSave(&$model)
+	public function beforeSave(Model $model)
 	{
 		parent::beforeSave($model);
 
-		$this->_Model =& $model;
-		
+		$this->_Model = $model;
+
 		if(isset($this->_disabledFor[$model->alias]))
 			return true;
-	
+
 		$this->_autoTrim();
 
 		return true;
 	}
-	
+
 	/**
 	 * Trim das informações no callback beforeFind
 	 *
 	 * @see ModelBehavior::beforeFind()
 	 */
-	public function beforeFind(&$model, $query)
+	public function beforeFind(Model $model, $query)
 	{
 		parent::beforeFind($model, $query);
 
-		$this->_Model =& $model;
-		
+		$this->_Model = $model;
+
 		if(!isset($this->_disabledFor[$model->alias]))
 			$this->_autoTrim($query['conditions']);
 
@@ -83,7 +83,7 @@ class AutoTrimBehavior extends ModelBehavior {
 
 		return $query;
 	}
-	
+
 	private function _autoTrim(&$query = null)
 	{
 		// verifica se há dados setados no modelo
@@ -104,7 +104,7 @@ class AutoTrimBehavior extends ModelBehavior {
 				}
 			}
 		}
-		
+
 		// caso tenha sido invocado em um Find (haja query de busca)
 		if(!empty($query) && is_array($query))
 		{
@@ -116,15 +116,15 @@ class AutoTrimBehavior extends ModelBehavior {
 					$this->_autoTrim($value);
 					continue;
 				}
-			
+
 				// caso sejam campos com a notação Model.field
 				if(strpos($field, '.') !== false)
 				{
 					$ini = strpos($field, '.');
 					$len = strpos($field, ' ');
-						
+
 					$modelName = substr($field, 0, $ini - 1);
-						
+
 					if($len !== false)
 						$field = substr($field, $ini + 1, $len - $ini - 1);
 					else
