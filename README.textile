@@ -1,4 +1,4 @@
-h1. CakePHP UserGuard
+h1. CakePHP UserGuard !https://travis-ci.org/radig/user_guard.png?branch=master(Build Status)!
 
 Este plugin contém alguns recursos úteis para prevenir erros provocados pelo usuário
 (em especial o preenchimento incorreto de formulário).
