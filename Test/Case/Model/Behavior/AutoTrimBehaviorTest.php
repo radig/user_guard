@@ -28,21 +28,18 @@ class AutoTrimBehaviorTest extends CakeTestCase {
 
 	public $Task;
 
-	public function startTest($method)
-	{
+	public function startTest($method) {
 		$this->Task = ClassRegistry::init('UserGuard.Task');
 	}
 
-	public function endTest($method)
-	{
+	public function endTest($method) {
 		unset($this->Task);
 	}
 
 	/**
 	* Testa uma ação de busca
 	*/
-	public function testFindAction()
-	{
+	public function testFindAction() {
 		$result = $this->Task->find('all',
 			array('conditions' => array('username' => ' Good'))
 		);
@@ -73,13 +70,7 @@ class AutoTrimBehaviorTest extends CakeTestCase {
 		$this->assertEqual($result, $expected);
 	}
 
-	/*public function testValidateAction()
-	{
-
-	}*/
-
-	public function testSaveAction()
-	{
+	public function testSaveAction() {
 		$this->Task->save(array(
 			'id' => 1,
 			'title' => 'World Cup',
