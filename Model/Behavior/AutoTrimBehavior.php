@@ -23,8 +23,9 @@ class AutoTrimBehavior extends ModelBehavior {
 	{
 		$db = $model->getDataSource();
 
-		if(!isset($db->columns))
+		if (!isset($db->columns)) {
 			$this->_disabledFor[$model->alias] = true;
+		}
 	}
 
 	/**
@@ -38,8 +39,9 @@ class AutoTrimBehavior extends ModelBehavior {
 
 		$this->_Model = $model;
 
-		if(isset($this->_disabledFor[$model->alias]))
+		if (isset($this->_disabledFor[$model->alias])) {
 			return true;
+		}
 
 		$this->_autoTrim();
 
@@ -57,8 +59,9 @@ class AutoTrimBehavior extends ModelBehavior {
 
 		$this->_Model = $model;
 
-		if(isset($this->_disabledFor[$model->alias]))
+		if (isset($this->_disabledFor[$model->alias])) {
 			return true;
+		}
 
 		$this->_autoTrim();
 
@@ -76,8 +79,9 @@ class AutoTrimBehavior extends ModelBehavior {
 
 		$this->_Model = $model;
 
-		if(!isset($this->_disabledFor[$model->alias]))
+		if (!isset($this->_disabledFor[$model->alias])) {
 			$this->_autoTrim($query['conditions']);
+		}
 
 		$this->_autoTrim();
 
@@ -87,16 +91,12 @@ class AutoTrimBehavior extends ModelBehavior {
 	private function _autoTrim(&$query = null)
 	{
 		// verifica se há dados setados no modelo
-		if(isset($this->_Model->data[$this->_Model->alias]) && !empty($this->_Model->data[$this->_Model->alias]))
-		{
+		if (isset($this->_Model->data[$this->_Model->alias]) && !empty($this->_Model->data[$this->_Model->alias])) {
 			// varre os dados setados
-			foreach($this->_Model->data[$this->_Model->alias] as $field => $value)
-			{
+			foreach ($this->_Model->data[$this->_Model->alias] as $field => $value) {
 				// caso o campo esteja vazio E não tenha um array como valor E o campo faz parte do schema
-				if(!empty($value) && !is_array($value) && isset($this->_Model->_schema[$field]))
-				{
-					switch($this->_Model->_schema[$field]['type'])
-					{
+				if (!empty($value) && !is_array($value) && isset($this->_Model->_schema[$field])) {
+					switch ($this->_Model->_schema[$field]['type']) {
 						case 'string':
 						case 'text':
 							$this->_Model->data[$this->_Model->alias][$field] = trim($this->_Model->data[$this->_Model->alias][$field]);
@@ -106,38 +106,29 @@ class AutoTrimBehavior extends ModelBehavior {
 		}
 
 		// caso tenha sido invocado em um Find (haja query de busca)
-		if(!empty($query) && is_array($query))
-		{
+		if (!empty($query) && is_array($query)) {
 			// varre os campos da condição
-			foreach($query as $field => &$value)
-			{
-				if(strtolower($field) === 'or' || strtolower($field) === 'and' || is_numeric($field))
-				{
+			foreach ($query as $field => &$value) {
+				if (strtolower($field) === 'or' || strtolower($field) === 'and' || is_numeric($field)) {
 					$this->_autoTrim($value);
 					continue;
 				}
 
-				// caso sejam campos com a notação Model.field
-				if(strpos($field, '.') !== false)
-				{
-					$ini = strpos($field, '.');
-					$len = strpos($field, ' ');
+				// notação Model.field
+				if (strpos($field, '.') !== false) {
+					list($modelName, $field) = explode('.', $field, 2);
+					$hasSpaceAfter = strpos($field, ' ');
 
-					$modelName = substr($field, 0, $ini - 1);
-
-					if($len !== false)
-						$field = substr($field, $ini + 1, $len - $ini - 1);
-					else
-						$field = substr($field, $ini + 1);
+					if ($hasSpaceAfter !== false) {
+						list($field,) = explode(' ', $field, 2);
+					}
 				}
 
 				$modelSchema = $this->_Model->schema();
 
-				// caso o campo esteja vazio E não tenha um array como valor E o campo faz parte do schema
-				if(!empty($value) && isset($modelSchema[$field]))
-				{
-					switch($modelSchema[$field]['type'])
-					{
+				// campo esteja vazio E não tenha um array como valor
+				if (!empty($value) && isset($modelSchema[$field]) && !is_array($value)) {
+					switch ($modelSchema[$field]['type']) {
 						case 'string':
 						case 'text':
 							$value = trim($value);
