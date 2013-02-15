@@ -23,7 +23,7 @@ class AutoTrimBehavior extends ModelBehavior {
 	{
 		$db = $model->getDataSource();
 
-		if (!isset($db->columns)) {
+		if (!isset($db->columns) || is_a($db, 'MongodbSource')) {
 			$this->_disabledFor[$model->alias] = true;
 		}
 	}
@@ -117,9 +117,9 @@ class AutoTrimBehavior extends ModelBehavior {
 				// notação Model.field
 				if (strpos($field, '.') !== false) {
 					list($modelName, $field) = explode('.', $field, 2);
-					$hasSpaceAfter = strpos($field, ' ');
+					$hasSpaceAfter = (strpos($field, ' ') !== false);
 
-					if ($hasSpaceAfter !== false) {
+					if ($hasSpaceAfter) {
 						list($field,) = explode(' ', $field, 2);
 					}
 				}
