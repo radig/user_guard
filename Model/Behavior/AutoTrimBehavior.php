@@ -33,9 +33,9 @@ class AutoTrimBehavior extends ModelBehavior {
 	*
 	* @see ModelBehavior::beforeValidate()
 	*/
-	public function beforeValidate(Model $model)
+	public function beforeValidate(Model $model, $options = array())
 	{
-		parent::beforeValidate($model);
+		parent::beforeValidate($model, $options);
 
 		$this->_Model = $model;
 
@@ -53,9 +53,9 @@ class AutoTrimBehavior extends ModelBehavior {
 	 *
 	 * @see ModelBehavior::beforeSave()
 	 */
-	public function beforeSave(Model $model)
+	public function beforeSave(Model $model, $options = array())
 	{
-		parent::beforeSave($model);
+		parent::beforeSave($model, $options);
 
 		$this->_Model = $model;
 
