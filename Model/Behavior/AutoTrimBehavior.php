@@ -1,4 +1,21 @@
 <?php
+App::uses('ModelBehavior', 'Model');
+/**
+ * Behavior que remove automaticamente espaços que podem ser inseridos
+ * acidentalmente pelo usuário.
+ *
+ * PHP version > 5.3.1
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright Radig - Soluções em TI, www.radig.com.br
+ * @link http://www.radig.com.br
+ * @license http://www.opensource.org/licenses/mit-license.php The MIT License
+ *
+ * @package radig.UserGuard
+ * @subpackage Model.Behavior
+ */
 class AutoTrimBehavior extends ModelBehavior {
 
 	private $_Model;
